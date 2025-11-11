@@ -1,0 +1,67 @@
+{% extends 'miapp/base.html' %}
+
+{% block title %}Contacto - SoulComfort{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-lg border-0">
+                <div class="card-body p-5">
+                    <!-- Header -->
+                    <div class="text-center mb-4">
+                        <i class="fas fa-envelope fa-3x text-primary mb-3"></i>
+                        <h2 class="fw-bold">Contáctanos</h2>
+                        <p class="text-muted">¿Tienes alguna sugerencia, duda o problema? Escríbenos</p>
+                    </div>
+
+                    <!-- Formulario -->
+                    <form method="POST">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Tipo de consulta</label>
+                            {{ form.tipo_consulta }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Asunto</label>
+                            {{ form.asunto }}
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Mensaje</label>
+                            {{ form.mensaje }}
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-lg w-100">
+                            <i class="fas fa-paper-plane me-2"></i>Enviar Mensaje
+                        </button>
+                    </form>
+
+                    <!-- Información -->
+                    <div class="text-center mt-4">
+                        <small class="text-muted">
+                            <i class="fas fa-clock me-1"></i>
+                            Te responderemos en un plazo máximo de 48 horas.
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .form-control, .form-select {
+        border-radius: 12px;
+        border: 2px solid #e9ecef;
+        transition: all 0.3s ease;
+    }
+    
+    .form-control:focus, .form-select:focus {
+        border-color: var(--color-primary);
+        box-shadow: 0 0 0 0.2rem rgba(108, 99, 255, 0.25);
+    }
+</style>
+{% endblock %}

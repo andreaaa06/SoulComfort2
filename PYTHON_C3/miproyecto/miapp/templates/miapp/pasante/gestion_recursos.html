@@ -1,0 +1,210 @@
+{% extends 'miapp/base.html' %}
+
+{% block title %}Gestión de Recursos - Pasante{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="mb-4">
+                <i class="fas fa-book me-2"></i>Gestión de Recursos
+            </h1>
+            <p class="text-muted">Como pasante, puedes crear y gestionar recursos para los usuarios.</p>
+        </div>
+    </div>
+
+    <!-- Formulario para crear recurso -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="fas fa-plus me-2"></i>Crear Nuevo Recurso</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Título *</label>
+                                    <input type="text" name="titulo" class="form-control" placeholder="Título del recurso" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Tipo de Recurso *</label>
+                                    <select name="tipo_recurso" class="form-control" required>
+                                        <option value="video">Video</option>
+                                        <option value="articulo">Artículo</option>
+                                        <option value="texto_imagen">Texto con Imágenes</option>
+                                        <option value="ejercicio">Ejercicio Práctico</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Categoría *</label>
+                                    <select name="categoria" class="form-control" required>
+                                        {% for categoria in categorias %}
+                                        <option value="{{ categoria.id }}">{{ categoria.nombre }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Descripción *</label>
+                                    <textarea name="descripcion" class="form-control" rows="3" placeholder="Descripción del recurso" required></textarea>
+                                </div>
+                                <div class="mb-3 form-check form-switch">
+                                    <input type="checkbox" name="es_publico" class="form-check-input" checked>
+                                    <label class="form-check-label">Recurso público</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Contenido</label>
+                            <textarea name="contenido" class="form-control" rows="5" placeholder="Contenido completo del recurso..."></textarea>
+                        </div>
+                        <button type="submit" name="crear_recurso" class="btn btn-success">
+                            <i class="fas fa-save me-2"></i>Crear Recurso
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recursos creados por el pasante -->
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">
+                <i class="fas fa-list me-2"></i>
+                Mis Recursos Creados
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Título</th>
+                            <th>Tipo</th>
+                            <th>Categoría</th>
+                            <th>Fecha</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for recurso in recursos %}
+                        {% if recurso.creado_por == request.user %}
+                        <tr>
+                            <td>
+                                <strong>{{ recurso.titulo }}</strong>
+                                <br><small class="text-muted">{{ recurso.descripcion|truncatewords:8 }}</small>
+                            </td>
+                            <td>
+                                <span class="badge bg-info">
+                                    {{ recurso.get_tipo_recurso_display }}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge" style="background-color: {{ recurso.categoria.color }};">
+                                    {{ recurso.categoria.nombre }}
+                                </span>
+                            </td>
+                            <td>{{ recurso.creado_en|date:"d/m/Y" }}</td>
+                            <td>
+                                <span class="badge bg-{% if recurso.es_publico %}success{% else %}secondary{% endif %}">
+                                    {{ recurso.es_publico|yesno:"Público,Privado" }}
+                                </span>
+                            </td>
+                            <td>
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalRecurso{{ recurso.id }}">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <form method="post" style="display: inline;">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="recurso_id" value="{{ recurso.id }}">
+                                        <button type="submit" name="eliminar_recurso" class="btn btn-sm btn-outline-danger" onclick="return confirm('¿Estás seguro de eliminar este recurso?')">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- Modal Editar Recurso -->
+                        <div class="modal fade" id="modalRecurso{{ recurso.id }}" tabindex="-1">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Editar Recurso: {{ recurso.titulo }}</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <form method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="recurso_id" value="{{ recurso.id }}">
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Título</label>
+                                                        <input type="text" name="titulo" class="form-control" value="{{ recurso.titulo }}" required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Tipo de Recurso</label>
+                                                        <select name="tipo_recurso" class="form-select" required>
+                                                            <option value="video" {% if recurso.tipo_recurso == 'video' %}selected{% endif %}>Video</option>
+                                                            <option value="articulo" {% if recurso.tipo_recurso == 'articulo' %}selected{% endif %}>Artículo</option>
+                                                            <option value="texto_imagen" {% if recurso.tipo_recurso == 'texto_imagen' %}selected{% endif %}>Texto con Imágenes</option>
+                                                            <option value="ejercicio" {% if recurso.tipo_recurso == 'ejercicio' %}selected{% endif %}>Ejercicio Práctico</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Categoría</label>
+                                                        <select name="categoria" class="form-select" required>
+                                                            {% for categoria in categorias %}
+                                                            <option value="{{ categoria.id }}" {% if recurso.categoria.id == categoria.id %}selected{% endif %}>{{ categoria.nombre }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Descripción</label>
+                                                        <textarea name="descripcion" class="form-control" rows="3" required>{{ recurso.descripcion }}</textarea>
+                                                    </div>
+                                                    <div class="mb-3 form-check form-switch">
+                                                        <input type="checkbox" name="es_publico" class="form-check-input" {% if recurso.es_publico %}checked{% endif %}>
+                                                        <label class="form-check-label">Recurso público</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Contenido</label>
+                                                <textarea name="contenido" class="form-control" rows="5">{{ recurso.contenido }}</textarea>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                            <button type="submit" name="editar_recurso" class="btn btn-primary">Guardar Cambios</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center py-4">
+                                <i class="fas fa-folder-open fa-2x text-muted mb-3"></i>
+                                <p>No has creado recursos aún</p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,110 @@
+{% extends 'miapp/base.html' %}
+
+{% block title %}Gestión de Consultas - Pasante{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="mb-4">
+                <i class="fas fa-envelope me-2"></i>Gestión de Consultas
+            </h1>
+            <p class="text-muted">Como pasante, puedes responder a las consultas de los usuarios.</p>
+        </div>
+    </div>
+
+    <!-- Lista de consultas -->
+    <div class="row">
+        {% for consulta in consultas %}
+        <div class="col-12 mb-4">
+            <div class="card shadow {% if not consulta.respondido %}border-warning{% endif %}">
+                <div class="card-header {% if consulta.respondido %}bg-success{% else %}bg-warning{% endif %} text-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="mb-0">
+                                <i class="fas fa-{% if consulta.respondido %}check-circle{% else %}clock{% endif %} me-2"></i>
+                                {{ consulta.asunto }}
+                            </h5>
+                            <small>
+                                <i class="fas fa-user me-1"></i>{{ consulta.usuario.username }} | 
+                                <i class="fas fa-calendar me-1"></i>{{ consulta.creado_en|date:"d/m/Y H:i" }}
+                            </small>
+                        </div>
+                        <span class="badge bg-light text-dark">
+                            {{ consulta.get_tipo_consulta_display }}
+                        </span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h6>Mensaje del usuario:</h6>
+                            <div class="bg-light p-3 rounded mb-3">
+                                {{ consulta.mensaje|linebreaks }}
+                            </div>
+                            
+                            {% if consulta.respondido %}
+                            <h6 class="text-success">
+                                <i class="fas fa-check-circle me-2"></i>Respuesta enviada:
+                            </h6>
+                            <div class="bg-success bg-opacity-10 p-3 rounded">
+                                {{ consulta.respuesta|linebreaks }}
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6>Gestionar Consulta</h6>
+                                    
+                                    <div class="mb-3">
+                                        <strong>Estado:</strong>
+                                        <span class="badge bg-{% if consulta.respondido %}success{% else %}warning{% endif %} ms-2">
+                                            {{ consulta.respondido|yesno:"Respondida,Pendiente" }}
+                                        </span>
+                                    </div>
+                                    
+                                    {% if not consulta.respondido %}
+                                    <hr>
+                                    <form method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="consulta_id" value="{{ consulta.id }}">
+                                        <div class="mb-3">
+                                            <label class="form-label">Tu respuesta:</label>
+                                            <textarea name="respuesta" class="form-control" rows="5" 
+                                                      placeholder="Escribe una respuesta profesional y comprensiva..." 
+                                                      required></textarea>
+                                        </div>
+                                        <button type="submit" class="btn btn-success w-100">
+                                            <i class="fas fa-paper-plane me-2"></i>Enviar Respuesta
+                                        </button>
+                                    </form>
+                                    {% else %}
+                                    <div class="alert alert-success">
+                                        <i class="fas fa-check-circle me-2"></i>
+                                        <strong>Respondida</strong>
+                                        <br>
+                                        <small>El {{ consulta.creado_en|date:"d/m/Y" }}</small>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-body text-center py-5">
+                    <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                    <h4>No hay consultas</h4>
+                    <p class="text-muted">No se han recibido consultas aún.</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

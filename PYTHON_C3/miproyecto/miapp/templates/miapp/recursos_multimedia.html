@@ -1,0 +1,195 @@
+{% extends 'miapp/base.html' %}
+
+{% block title %}Recursos Multimedia - SoulComfort{% endblock %}
+
+{% block content %}
+<div class="container py-5 mt-5">
+    <div class="row">
+        <div class="col-12">
+            <!-- Header -->
+            <div class="text-center mb-5">
+                <h1 class="display-5 fw-bold text-primary mb-3">
+                    <i class="fas fa-play-circle me-3"></i>Recursos Multimedia
+                </h1>
+                <p class="lead text-muted">Descubre videos, artículos, podcasts y recursos visuales para tu bienestar emocional</p>
+            </div>
+
+            <!-- Filtros por categoría -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card feature-card">
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold mb-3">
+                                <i class="fas fa-filter me-2"></i>Filtrar por categoría
+                            </h5>
+                            <div class="d-flex flex-wrap gap-2">
+                                <button class="btn btn-primary">Todos</button>
+                                <button class="btn btn-outline-primary">Videos</button>
+                                <button class="btn btn-outline-primary">Artículos</button>
+                                <button class="btn btn-outline-primary">Podcasts</button>
+                                <button class="btn btn-outline-primary">Infografías</button>
+                                <button class="btn btn-outline-primary">Ejercicios</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recursos Multimedia Grid -->
+            <div class="row g-4">
+                <!-- Video 1 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card media-resource-card h-100">
+                        <span class="resource-badge badge bg-danger">Video</span>
+                        <img src="https://via.placeholder.com/400x200/6C63FF/FFFFFF?text=Meditación+Guiada" class="card-img-top resource-image" alt="Meditación Guiada">
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold">Meditación para la Ansiedad</h5>
+                            <p class="card-text text-muted">Sesión de 15 minutos para calmar la mente y reducir la ansiedad.</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted"><i class="fas fa-clock me-1"></i>15 min</small>
+                                <a href="#" class="btn btn-primary btn-sm">
+                                    <i class="fas fa-play me-1"></i>Ver Video
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Artículo 1 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card media-resource-card h-100">
+                        <span class="resource-badge badge bg-success">Artículo</span>
+                        <img src="https://via.placeholder.com/400x200/8A82FF/FFFFFF?text=Gestión+Emocional" class="card-img-top resource-image" alt="Gestión Emocional">
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold">5 Técnicas de Gestión Emocional</h5>
+                            <p class="card-text text-muted">Aprende estrategias prácticas para manejar tus emociones diarias.</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted"><i class="fas fa-book-open me-1"></i>8 min lectura</small>
+                                <a href="#" class="btn btn-success btn-sm">
+                                    <i class="fas fa-book me-1"></i>Leer
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Podcast 1 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card media-resource-card h-100">
+                        <span class="resource-badge badge bg-warning">Podcast</span>
+                        <img src="https://via.placeholder.com/400x200/A59BFF/FFFFFF?text=Mindfulness+Diario" class="card-img-top resource-image" alt="Mindfulness">
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold">Mindfulness en la Vida Cotidiana</h5>
+                            <p class="card-text text-muted">Cómo incorporar la atención plena en tu día a día.</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted"><i class="fas fa-headphones me-1"></i>25 min</small>
+                                <a href="#" class="btn btn-warning btn-sm">
+                                    <i class="fas fa-play me-1"></i>Escuchar
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Infografía 1 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card media-resource-card h-100">
+                        <span class="resource-badge badge bg-info">Infografía</span>
+                        <img src="https://via.placeholder.com/400x200/6C63FF/FFFFFF?text=Infografía+Emociones" class="card-img-top resource-image" alt="Infografía Emociones">
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold">Mapa de las Emociones</h5>
+                            <p class="card-text text-muted">Guía visual para identificar y comprender tus emociones.</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted"><i class="fas fa-chart-pie me-1"></i>Infografía</small>
+                                <a href="#" class="btn btn-info btn-sm">
+                                    <i class="fas fa-download me-1"></i>Descargar
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ejercicio 1 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card media-resource-card h-100">
+                        <span class="resource-badge badge bg-secondary">Ejercicio</span>
+                        <img src="https://via.placeholder.com/400x200/8A82FF/FFFFFF?text=Ejercicio+Respiración" class="card-img-top resource-image" alt="Ejercicio Respiración">
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold">Técnica 4-7-8 de Respiración</h5>
+                            <p class="card-text text-muted">Ejercicio práctico para reducir el estrés instantáneamente.</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted"><i class="fas fa-spa me-1"></i>5 min</small>
+                                <a href="#" class="btn btn-secondary btn-sm">
+                                    <i class="fas fa-play-circle me-1"></i>Practicar
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video 2 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card media-resource-card h-100">
+                        <span class="resource-badge badge bg-danger">Video</span>
+                        <img src="https://via.placeholder.com/400x200/A59BFF/FFFFFF?text=Yoga+Terapéutico" class="card-img-top resource-image" alt="Yoga Terapéutico">
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold">Yoga para el Estrés</h5>
+                            <p class="card-text text-muted">Sesión suave de yoga diseñada para liberar tensiones.</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted"><i class="fas fa-clock me-1"></i>20 min</small>
+                                <a href="#" class="btn btn-primary btn-sm">
+                                    <i class="fas fa-play me-1"></i>Ver Video
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CTA Section -->
+            <div class="text-center mt-5">
+                <div class="cta-section text-white py-5 px-3">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-8">
+                            <div class="position-relative z-1">
+                                <i class="fas fa-heart fa-3x mb-4" style="opacity: 0.8;"></i>
+                                <h2 class="fw-bold mb-3">¿Buscas algo específico?</h2>
+                                <p class="mb-4 fs-5">Contáctanos y te ayudaremos a encontrar los recursos perfectos para tu situación.</p>
+                                <a href="{% url 'miapp:formulario_contacto' %}" class="btn btn-light btn-lg px-4">
+                                    <i class="fas fa-envelope me-2"></i>Solicitar Ayuda Personalizada
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .cta-section {
+        background: linear-gradient(135deg, #6C63FF 0%, #8A82FF 50%, #A59BFF 100%);
+        border-radius: 25px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 15px 35px rgba(108, 99, 255, 0.3);
+    }
+    
+    .cta-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.1)"/></svg>');
+        background-size: cover;
+    }
+    
+    .position-relative.z-1 {
+        position: relative;
+        z-index: 1;
+    }
+</style>
+{% endblock %}

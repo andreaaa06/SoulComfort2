@@ -1,0 +1,101 @@
+{% extends 'miapp/base.html' %}
+
+{% block title %}Dashboard Pasante - SoulComfort{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid"> <!-- QUITAR mt-4 -->
+    <div class="row">
+        <div class="col-12">
+            <h1 class="mb-4"> <!-- MANTENER mb-4 pero no mt-4 -->
+                <i class="fas fa-tachometer-alt me-2"></i>Dashboard Pasante
+            </h1>
+
+    <!-- Estadísticas -->
+    <div class="row mb-4">
+        <div class="col-xl-4 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Total Recursos
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ stats.total_recursos }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-book fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-4 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Total Consultas
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ stats.total_consultas }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-envelope fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-4 col-md-6 mb-4">
+            <div class="card border-left-danger shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                                Consultas Pendientes
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ stats.consultas_sin_responder }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-clock fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Acciones rápidas -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="fas fa-tasks me-2"></i>Acciones Disponibles</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <a href="{% url 'miapp:pasante_gestion_recursos' %}" class="btn btn-outline-success w-100">
+                                <i class="fas fa-book me-2"></i>Gestionar Recursos
+                            </a>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <a href="{% url 'miapp:pasante_consultas' %}" class="btn btn-outline-warning w-100">
+                                <i class="fas fa-envelope me-2"></i>Ver Consultas
+                            </a>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <a href="{% url 'miapp:recursos' %}" class="btn btn-outline-info w-100">
+                                <i class="fas fa-eye me-2"></i>Ver como Usuario
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

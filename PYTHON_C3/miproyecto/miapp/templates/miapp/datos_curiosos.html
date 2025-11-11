@@ -1,0 +1,127 @@
+{% extends 'miapp/base.html' %}
+
+{% block title %}Datos Curiosos - SoulComfort{% endblock %}
+
+{% block content %}
+<div class="container py-5 mt-5">
+    <div class="row">
+        <div class="col-12">
+            <!-- Header Mejorado -->
+            <div class="text-center mb-5">
+                <h1 class="display-5 fw-bold text-primary mb-3">
+                    <i class="fas fa-lightbulb me-3"></i>Datos Curiosos
+                </h1>
+                <p class="lead text-muted">Descubre información fascinante sobre salud mental que transformará tu perspectiva del bienestar emocional</p>
+                <div class="welcome-badge bg-primary text-white">
+                    <i class="fas fa-graduation-cap me-2"></i>Aprende algo nuevo cada día
+                </div>
+            </div>
+
+            <!-- Datos Curiosos Grid Responsive -->
+            <div class="row g-4">
+                <!-- Dato 1 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card feature-card h-100">
+                        <div class="card-body p-4 text-center">
+                            <div class="mb-3">
+                                <i class="fas fa-brain text-primary fa-3x"></i>
+                            </div>
+                            <h5 class="card-title fw-bold mb-3">Ejercicio vs Antidepresivos</h5>
+                            <p class="card-text">30 minutos de ejercicio diario pueden ser tan efectivos como medicamentos para depresión leve, gracias a las endorfinas naturales.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dato 2 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card feature-card h-100">
+                        <div class="card-body p-4 text-center">
+                            <div class="mb-3">
+                                <i class="fas fa-moon text-warning fa-3x"></i>
+                            </div>
+                            <h5 class="card-title fw-bold mb-3">Sueño Reparador</h5>
+                            <p class="card-text">Dormir menos de 6 horas aumenta el cortisol (hormona del estrés) en un 37% y afecta tu capacidad emocional.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dato 3 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card feature-card h-100">
+                        <div class="card-body p-4 text-center">
+                            <div class="mb-3">
+                                <i class="fas fa-laugh-beam text-success fa-3x"></i>
+                            </div>
+                            <h5 class="card-title fw-bold mb-3">Risaterapia Natural</h5>
+                            <p class="card-text">15 minutos de risa continua reducen el cortisol en 25% y queman 40 calorías. ¡La alegría es salud!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dato 4 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card feature-card h-100">
+                        <div class="card-body p-4 text-center">
+                            <div class="mb-3">
+                                <i class="fas fa-hands-helping text-info fa-3x"></i>
+                            </div>
+                            <h5 class="card-title fw-bold mb-3">Poder del Contacto</h5>
+                            <p class="card-text">Un abrazo de 20 segundos libera oxitocina, reduciendo la presión arterial y mejorando el estado de ánimo.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dato 5 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card feature-card h-100">
+                        <div class="card-body p-4 text-center">
+                            <div class="mb-3">
+                                <i class="fas fa-utensils text-danger fa-3x"></i>
+                            </div>
+                            <h5 class="card-title fw-bold mb-3">Alimentación Emocional</h5>
+                            <p class="card-text">El omega-3 del salmón y nueces actúa como antidepresivo natural mejorando la comunicación neuronal.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dato 6 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card feature-card h-100">
+                        <div class="card-body p-4 text-center">
+                            <div class="mb-3">
+                                <i class="fas fa-users text-secondary fa-3x"></i>
+                            </div>
+                            <h5 class="card-title fw-bold mb-3">Conexiones que Sanan</h5>
+                            <p class="card-text">Personas con fuertes lazos sociales viven 50% más y tienen mejor salud mental. ¡Conecta más!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Call to Action -->
+            <div class="text-center mt-5">
+                <div class="cta-section text-white py-5 px-3">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-8">
+                            <h2 class="fw-bold mb-3">¿Listo para profundizar en tu bienestar?</h2>
+                            <p class="mb-4">Explora nuestros recursos especializados y descubre herramientas prácticas para tu crecimiento emocional.</p>
+                            <a href="{% url 'miapp:recursos' %}" class="btn btn-light btn-lg px-4">
+                                <i class="fas fa-book-open me-2"></i>Explorar Recursos
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .cta-section {
+        background: linear-gradient(135deg, #6C63FF 0%, #8A82FF 100%);
+        border-radius: 20px;
+        position: relative;
+        overflow: hidden;
+    }
+</style>
+{% endblock %}
