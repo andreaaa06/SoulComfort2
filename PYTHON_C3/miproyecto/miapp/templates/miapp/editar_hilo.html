@@ -3,29 +3,35 @@
 {% block title %}Editar Hilo - Foro SoulComfort{% endblock %}
 
 {% block content %}
-<div class="container py-4">
+<div class="container-fluid py-3 py-md-4">
     <div class="row justify-content-center">
-        <div class="col-lg-8">
-            <!-- Header -->
-            <div class="d-flex align-items-center mb-4">
-                <a href="{% url 'miapp:detalle_hilo' hilo.id %}" class="btn btn-outline-secondary me-3">
+        <div class="col-12 col-lg-10 col-xl-8">
+            <!-- Header Responsive -->
+            <div class="d-flex align-items-center mb-3 mb-md-4">
+                <a href="{% url 'miapp:detalle_hilo' hilo.id %}" class="btn btn-outline-secondary btn-sm me-3">
                     <i class="fas fa-arrow-left"></i>
+                    <span class="d-none d-md-inline ms-1">Volver</span>
                 </a>
-                <h1 class="h3 mb-0">Editar Hilo</h1>
+                <h1 class="h4 h3-md mb-0">
+                    <i class="fas fa-edit me-2 d-none d-md-inline"></i>
+                    Editar Hilo
+                </h1>
             </div>
 
-            <!-- Formulario -->
+            <!-- Formulario Responsive -->
             <div class="card border-0 shadow-sm">
-                <div class="card-body p-4">
+                <div class="card-body p-3 p-md-4">
                     <form method="post">
                         {% csrf_token %}
                         
-                        <!-- Categoría -->
-                        <div class="mb-4">
+                        <!-- Categoría Responsive -->
+                        <div class="mb-3 mb-md-4">
                             <label for="categoria" class="form-label fw-semibold">
-                                <i class="fas fa-tag me-2"></i>Categoría
+                                <i class="fas fa-tag me-2"></i>
+                                <span class="d-none d-md-inline">Categoría</span>
+                                <span class="d-md-none">Categoría</span>
                             </label>
-                            <select name="categoria" id="categoria" class="form-select" required>
+                            <select name="categoria" id="categoria" class="form-select form-select-lg" required>
                                 <option value="">Selecciona una categoría</option>
                                 {% for categoria in categorias %}
                                 <option value="{{ categoria.id }}" {% if hilo.categoria.id == categoria.id %}selected{% endif %}>
@@ -35,48 +41,51 @@
                             </select>
                         </div>
 
-                        <!-- Título -->
-                        <div class="mb-4">
+                        <!-- Título Responsive -->
+                        <div class="mb-3 mb-md-4">
                             <label for="titulo" class="form-label fw-semibold">
-                                <i class="fas fa-heading me-2"></i>Título del Hilo
+                                <i class="fas fa-heading me-2"></i>
+                                <span class="d-none d-md-inline">Título del Hilo</span>
+                                <span class="d-md-none">Título</span>
                             </label>
                             <input type="text" name="titulo" id="titulo" class="form-control form-control-lg" 
                                    value="{{ hilo.titulo }}" required maxlength="200">
-                            <div class="form-text">Sé específico sobre el tema que quieres discutir.</div>
                         </div>
 
-                        <!-- Contenido -->
-                        <div class="mb-4">
+                        <!-- Contenido Responsive -->
+                        <div class="mb-3 mb-md-4">
                             <label for="contenido" class="form-label fw-semibold">
-                                <i class="fas fa-edit me-2"></i>Contenido
+                                <i class="fas fa-edit me-2"></i>
+                                <span class="d-none d-md-inline">Contenido</span>
+                                <span class="d-md-none">Mensaje</span>
                             </label>
-                            <textarea name="contenido" id="contenido" class="form-control" rows="10" 
+                            <textarea name="contenido" id="contenido" class="form-control" rows="8" 
                                       required>{{ hilo.contenido }}</textarea>
-                            <div class="form-text">
-                                Comparte tus pensamientos de manera clara. Recuerda que este es un espacio seguro y respetuoso.
-                            </div>
                         </div>
 
-                        <!-- Opciones -->
+                        <!-- Opciones Responsive -->
                         <div class="mb-4">
                             <div class="form-check">
                                 <input type="checkbox" name="es_anonimo" id="es_anonimo" class="form-check-input" {% if hilo.es_anonimo %}checked{% endif %}>
                                 <label for="es_anonimo" class="form-check-label">
-                                    <i class="fas fa-user-secret me-2"></i>Publicar de forma anónima
+                                    <i class="fas fa-user-secret me-2"></i>
+                                    <span class="d-none d-md-inline">Publicar de forma anónima</span>
+                                    <span class="d-md-none">Anónimo</span>
                                 </label>
-                            </div>
-                            <div class="form-text">
-                                Tu nombre de usuario no será visible para otros miembros.
                             </div>
                         </div>
 
-                        <!-- Botones -->
-                        <div class="d-flex justify-content-between align-items-center">
-                            <a href="{% url 'miapp:detalle_hilo' hilo.id %}" class="btn btn-outline-secondary">
-                                <i class="fas fa-times me-2"></i>Cancelar
+                        <!-- Botones Responsive -->
+                        <div class="d-flex flex-column flex-md-row justify-content-between align-items-stretch align-items-md-center gap-2">
+                            <a href="{% url 'miapp:detalle_hilo' hilo.id %}" class="btn btn-outline-secondary order-2 order-md-1">
+                                <i class="fas fa-times me-2"></i>
+                                <span class="d-none d-md-inline">Cancelar</span>
+                                <span class="d-md-none">Cancelar</span>
                             </a>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save me-2"></i>Guardar Cambios
+                            <button type="submit" class="btn btn-primary order-1 order-md-2">
+                                <i class="fas fa-save me-2"></i>
+                                <span class="d-none d-md-inline">Guardar Cambios</span>
+                                <span class="d-md-none">Guardar</span>
                             </button>
                         </div>
                     </form>
@@ -87,9 +96,17 @@
 </div>
 
 <style>
-.form-control:focus {
+.form-control:focus,
+.form-select:focus {
     border-color: var(--color-primary);
     box-shadow: 0 0 0 0.2rem rgba(108, 99, 255, 0.25);
+}
+
+@media (max-width: 576px) {
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
 }
 </style>
 {% endblock %}

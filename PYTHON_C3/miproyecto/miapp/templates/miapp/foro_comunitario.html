@@ -4,20 +4,21 @@
 {% block title %}Foro Comunitario - SoulComfort{% endblock %}
 
 {% block content %}
-<div class="container py-4">
-    <!-- Header del Foro -->
-    <div class="row mb-4">
+<div class="container-fluid py-3 py-md-4">
+    <!-- Header del Foro Responsive -->
+    <div class="row mb-3 mb-md-4">
         <div class="col-12">
-            <div class="forum-header bg-primary text-white rounded-3 p-4">
+            <div class="forum-header bg-primary text-white rounded-3 p-3 p-md-4">
                 <div class="row align-items-center">
-                    <div class="col-md-8">
-                        <h1 class="display-6 fw-bold mb-2">
-                            <i class="fas fa-users me-3"></i>Foro Comunitario
+                    <div class="col-12 col-md-8 mb-3 mb-md-0">
+                        <h1 class="h3 h1-md fw-bold mb-2">
+                            <i class="fas fa-users me-2 me-md-3"></i>Foro Comunitario
                         </h1>
-                        <p class="lead mb-0">Un espacio seguro para compartir experiencias y apoyo mutuo entre pacientes</p>
+                        <p class="lead mb-0 d-none d-md-block">Un espacio seguro para compartir experiencias y apoyo mutuo entre pacientes</p>
+                        <p class="mb-0 d-md-none">Espacio seguro para apoyo mutuo entre pacientes</p>
                     </div>
-                    <div class="col-md-4 text-end">
-                        <a href="{% url 'miapp:crear_hilo' %}" class="btn btn-light btn-lg">
+                    <div class="col-12 col-md-4 text-start text-md-end">
+                        <a href="{% url 'miapp:crear_hilo' %}" class="btn btn-light btn-lg w-100 w-md-auto">
                             <i class="fas fa-plus me-2"></i>Nuevo Hilo
                         </a>
                     </div>
@@ -27,100 +28,134 @@
     </div>
 
     <div class="row">
-        <!-- Sidebar de Estadísticas y Filtros -->
-        <div class="col-lg-3 mb-4">
-            <!-- Estadísticas -->
-            <div class="card border-0 shadow-sm mb-4">
-                <div class="card-header bg-primary text-white">
-                    <h6 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Estadísticas</h6>
-                </div>
-                <div class="card-body">
-                    <div class="d-flex justify-content-between mb-3">
-                        <div class="text-center">
-                            <div class="h4 text-primary fw-bold">{{ stats.total_hilos }}</div>
-                            <small class="text-muted">Hilos</small>
-                        </div>
-                        <div class="text-center">
-                            <div class="h4 text-success fw-bold">{{ stats.total_respuestas }}</div>
-                            <small class="text-muted">Respuestas</small>
-                        </div>
-                        <div class="text-center">
-                            <div class="h4 text-warning fw-bold">{{ stats.hilos_abiertos }}</div>
-                            <small class="text-muted">Activos</small>
+        <!-- Sidebar Responsive - Se convierte en acordeón en móviles -->
+        <div class="col-12 col-lg-3 mb-4">
+            <div class="d-lg-none mb-3">
+                <button class="btn btn-primary w-100 d-flex justify-content-between align-items-center" 
+                        type="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse">
+                    <span><i class="fas fa-filter me-2"></i>Filtros y Estadísticas</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+            </div>
+
+            <div class="collapse d-lg-block" id="sidebarCollapse">
+                <!-- Estadísticas Responsive -->
+                <div class="card border-0 shadow-sm mb-3 mb-md-4">
+                    <div class="card-header bg-primary text-white py-2 py-md-3">
+                        <h6 class="mb-0 fs-6">
+                            <i class="fas fa-chart-bar me-2"></i>Estadísticas
+                        </h6>
+                    </div>
+                    <div class="card-body p-2 p-md-3">
+                        <div class="row text-center">
+                            <div class="col-4">
+                                <div class="h5 h4-md fw-bold text-primary mb-1">{{ stats.total_hilos }}</div>
+                                <small class="text-muted d-none d-md-block">Hilos</small>
+                                <small class="text-muted d-md-none">H</small>
+                            </div>
+                            <div class="col-4">
+                                <div class="h5 h4-md fw-bold text-success mb-1">{{ stats.total_respuestas }}</div>
+                                <small class="text-muted d-none d-md-block">Respuestas</small>
+                                <small class="text-muted d-md-none">R</small>
+                            </div>
+                            <div class="col-4">
+                                <div class="h5 h4-md fw-bold text-warning mb-1">{{ stats.hilos_abiertos }}</div>
+                                <small class="text-muted d-none d-md-block">Activos</small>
+                                <small class="text-muted d-md-none">A</small>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Filtros Corregidos -->
-            <div class="card border-0 shadow-sm">
-                <div class="card-header bg-light">
-                    <h6 class="mb-0"><i class="fas fa-filter me-2"></i>Filtros</h6>
+                <!-- Filtros Responsive -->
+                <div class="card border-0 shadow-sm mb-3 mb-md-4">
+                    <div class="card-header bg-light py-2 py-md-3">
+                        <h6 class="mb-0 fs-6">
+                            <i class="fas fa-filter me-2"></i>Filtros
+                        </h6>
+                    </div>
+                    <div class="card-body p-2 p-md-3">
+                        <form method="get" id="filterForm">
+                            <input type="hidden" name="aplicar_filtros" value="1">
+                            
+                            <!-- Categorías -->
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold small small-md">Categoría</label>
+                                <select name="categoria" class="form-select form-select-sm">
+                                    <option value="todas" {% if not categoria_actual %}selected{% endif %}>Todas las categorías</option>
+                                    {% for categoria in categorias %}
+                                    <option value="{{ categoria.id }}" {% if categoria_actual == categoria.id|stringformat:"i" %}selected{% endif %}>
+                                        {{ categoria.nombre }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <!-- Orden -->
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold small small-md">Ordenar por</label>
+                                <select name="orden" class="form-select form-select-sm">
+                                    <option value="recientes" {% if orden_actual == 'recientes' %}selected{% endif %}>Más recientes</option>
+                                    <option value="populares" {% if orden_actual == 'populares' %}selected{% endif %}>Más populares</option>
+                                    <option value="antiguos" {% if orden_actual == 'antiguos' %}selected{% endif %}>Más antiguos</option>
+                                </select>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-sm w-100 mb-2">
+                                <i class="fas fa-sync me-2"></i>Aplicar Filtros
+                            </button>
+                            
+                            {% if categoria_actual or orden_actual != 'recientes' %}
+                            <a href="{% url 'miapp:foro_comunitario' %}" class="btn btn-outline-secondary btn-sm w-100">
+                                <i class="fas fa-times me-2"></i>Limpiar Filtros
+                            </a>
+                            {% endif %}
+                        </form>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <form method="get" id="filterForm">
-                        <!-- Campo oculto para detectar cuando se aplican filtros -->
-                        <input type="hidden" name="aplicar_filtros" value="1">
-                        
-                        <!-- Categorías -->
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold">Categoría</label>
-                            <select name="categoria" class="form-select">
-                                <option value="todas" {% if not categoria_actual %}selected{% endif %}>Todas las categorías</option>
-                                {% for categoria in categorias %}
-                                <option value="{{ categoria.id }}" {% if categoria_actual == categoria.id|stringformat:"i" %}selected{% endif %}>
-                                    {{ categoria.nombre }}
-                                </option>
-                                {% endfor %}
-                            </select>
-                        </div>
 
-                        <!-- Orden -->
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold">Ordenar por</label>
-                            <select name="orden" class="form-select">
-                                <option value="recientes" {% if orden_actual == 'recientes' %}selected{% endif %}>Más recientes</option>
-                                <option value="populares" {% if orden_actual == 'populares' %}selected{% endif %}>Más populares</option>
-                                <option value="antiguos" {% if orden_actual == 'antiguos' %}selected{% endif %}>Más antiguos</option>
-                            </select>
-                        </div>
-
-                        <button type="submit" class="btn btn-primary w-100">
-                            <i class="fas fa-sync me-2"></i>Aplicar Filtros
-                        </button>
-                        
-                        {% if categoria_actual or orden_actual != 'recientes' %}
-                        <a href="{% url 'miapp:foro_comunitario' %}" class="btn btn-outline-secondary w-100 mt-2">
-                            <i class="fas fa-times me-2"></i>Limpiar Filtros
-                        </a>
-                        {% endif %}
-                    </form>
-                </div>
-            </div>
-
-            <!-- Normas del Foro -->
-            <div class="card border-0 shadow-sm mt-4">
-                <div class="card-header bg-success text-white">
-                    <h6 class="mb-0"><i class="fas fa-shield-alt me-2"></i>Normas</h6>
-                </div>
-                <div class="card-body">
-                    <small>
-                        <ul class="list-unstyled mb-0">
-                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Respeta a todos los miembros</li>
-                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>No compartas información personal</li>
-                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Mantén la confidencialidad</li>
-                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Reporta contenido inapropiado</li>
-                        </ul>
-                    </small>
+                <!-- Normas Responsive -->
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-success text-white py-2 py-md-3">
+                        <h6 class="mb-0 fs-6">
+                            <i class="fas fa-shield-alt me-2"></i>Normas
+                        </h6>
+                    </div>
+                    <div class="card-body p-2 p-md-3">
+                        <small class="small">
+                            <ul class="list-unstyled mb-0">
+                                <li class="mb-1 mb-md-2">
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    <span class="d-none d-md-inline">Respeta a todos los miembros</span>
+                                    <span class="d-md-none">Respeto mutuo</span>
+                                </li>
+                                <li class="mb-1 mb-md-2">
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    <span class="d-none d-md-inline">No información personal</span>
+                                    <span class="d-md-none">Privacidad</span>
+                                </li>
+                                <li class="mb-1 mb-md-2">
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    <span class="d-none d-md-inline">Confidencialidad</span>
+                                    <span class="d-md-none">Confidencial</span>
+                                </li>
+                                <li class="mb-0">
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    <span class="d-none d-md-inline">Reporta contenido inapropiado</span>
+                                    <span class="d-md-none">Reportar</span>
+                                </li>
+                            </ul>
+                        </small>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Lista de Hilos -->
-        <div class="col-lg-9">
-            <!-- Barra de Acciones -->
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h4 class="mb-0">
+        <!-- Lista de Hilos Responsive -->
+        <div class="col-12 col-lg-9">
+            <!-- Barra de Acciones Responsive -->
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3 mb-md-4">
+                <h4 class="h5 h4-md mb-2 mb-md-0">
                     {% if categoria_actual and categoria_actual != 'todas' %}
                         {% for cat in categorias %}
                             {% if cat.id == categoria_actual|add:"0" %}
@@ -132,21 +167,26 @@
                     {% endif %}
                 </h4>
                 
-                <!-- Mostrar filtros activos -->
+                <!-- Filtros activos Responsive -->
                 {% if categoria_actual or orden_actual != 'recientes' %}
                 <div class="text-muted">
-                    <small>
+                    <small class="small">
                         {% if categoria_actual and categoria_actual != 'todas' %}
-                        <span class="badge bg-primary me-2">Categoría: 
+                        <span class="badge bg-primary me-1 me-md-2 d-none d-sm-inline">Cat: 
                             {% for cat in categorias %}
                                 {% if cat.id == categoria_actual|add:"0" %}{{ cat.nombre }}{% endif %}
                             {% endfor %}
                         </span>
+                        <span class="badge bg-primary me-1 me-md-2 d-sm-none">C</span>
                         {% endif %}
                         {% if orden_actual != 'recientes' %}
-                        <span class="badge bg-secondary">Orden: 
-                            {% if orden_actual == 'populares' %}Más populares{% endif %}
-                            {% if orden_actual == 'antiguos' %}Más antiguos{% endif %}
+                        <span class="badge bg-secondary d-none d-sm-inline">
+                            {% if orden_actual == 'populares' %}Populares{% endif %}
+                            {% if orden_actual == 'antiguos' %}Antiguos{% endif %}
+                        </span>
+                        <span class="badge bg-secondary d-sm-none">
+                            {% if orden_actual == 'populares' %}P{% endif %}
+                            {% if orden_actual == 'antiguos' %}A{% endif %}
                         </span>
                         {% endif %}
                     </small>
@@ -154,36 +194,40 @@
                 {% endif %}
             </div>
 
-            <!-- Lista de Hilos -->
+            <!-- Lista de Hilos Responsive -->
             {% if hilos %}
                 {% for hilo in hilos %}
                 <div class="card border-0 shadow-sm mb-3 thread-card">
-                    <div class="card-body">
+                    <div class="card-body p-3">
                         <div class="row">
-                            <div class="col-md-8">
-                                <!-- Categoría -->
+                            <!-- Contenido Principal -->
+                            <div class="col-12 col-md-8 mb-3 mb-md-0">
+                                <!-- Categoría y Estado -->
                                 <div class="d-flex align-items-center mb-2">
-                                    <span class="badge rounded-pill" style="background-color: {{ hilo.categoria.color }}; color: white;">
+                                    <span class="badge rounded-pill small" style="background-color: {{ hilo.categoria.color }}; color: white;">
                                         {{ hilo.categoria.nombre }}
                                     </span>
                                 </div>
 
                                 <!-- Título del Hilo -->
-                                <h5 class="card-title">
+                                <h5 class="card-title h6 h5-md mb-2">
                                     <a href="{% url 'miapp:detalle_hilo' hilo.id %}" class="text-decoration-none text-dark">
                                         {{ hilo.titulo }}
                                     </a>
                                 </h5>
 
                                 <!-- Contenido preview -->
-                                <p class="card-text text-muted mb-3">
+                                <p class="card-text text-muted small mb-3 d-none d-md-block">
                                     {{ hilo.contenido|truncatewords:30 }}
                                 </p>
+                                <p class="card-text text-muted small mb-3 d-md-none">
+                                    {{ hilo.contenido|truncatewords:15 }}
+                                </p>
 
-                                <!-- Información del Autor -->
+                                <!-- Información del Autor Responsive -->
                                 <div class="d-flex align-items-center">
                                     <div class="user-avatar-small bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2" 
-                                         style="width: 32px; height: 32px; font-size: 0.8rem;">
+                                         style="width: 28px; height: 28px; font-size: 0.7rem;">
                                         {% if hilo.es_anonimo %}
                                         <i class="fas fa-user-secret"></i>
                                         {% else %}
@@ -192,42 +236,51 @@
                                     </div>
                                     <div>
                                         <small class="text-muted">
-                                            Por 
+                                            <span class="d-none d-sm-inline">Por </span>
                                             {% if hilo.es_anonimo %}
-                                            <strong>Usuario Anónimo</strong>
+                                            <strong>Anónimo</strong>
                                             {% else %}
-                                            <strong>
+                                            <strong class="small">
                                                 {% if hilo.creado_por.first_name %}
-                                                    {{ hilo.creado_por.first_name }} {{ hilo.creado_por.last_name }}
+                                                    {{ hilo.creado_por.first_name }}
                                                 {% else %}
                                                     {{ hilo.creado_por.username }}
                                                 {% endif %}
                                             </strong>
                                             {% endif %}
-                                            · {{ hilo.creado_en|timesince }}
+                                            · <span class="d-none d-md-inline">{{ hilo.creado_en|timesince }}</span>
+                                            <span class="d-md-none">{{ hilo.creado_en|date:"d/m" }}</span>
                                         </small>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="col-md-4 text-end">
-                                <!-- Estadísticas -->
-                                <div class="d-flex justify-content-end mb-3">
-                                    <div class="text-center me-4">
-                                        <div class="h5 fw-bold text-primary">{{ hilo.total_respuestas }}</div>
-                                        <small class="text-muted">Respuestas</small>
-                                    </div>
-                                    <div class="text-center">
-                                        <div class="h5 fw-bold text-warning">{{ hilo.visitas }}</div>
-                                        <small class="text-muted">Visitas</small>
+                            <!-- Estadísticas y Acciones Responsive -->
+                            <div class="col-12 col-md-4">
+                                <div class="d-flex justify-content-between justify-content-md-end mb-3">
+                                    <!-- Estadísticas -->
+                                    <div class="d-flex">
+                                        <div class="text-center me-3 me-md-4">
+                                            <div class="h6 h5-md fw-bold text-primary mb-0">{{ hilo.total_respuestas }}</div>
+                                            <small class="text-muted d-none d-md-block">Respuestas</small>
+                                            <small class="text-muted d-md-none">R</small>
+                                        </div>
+                                      
+                                        <div class="text-center">
+                                            <div class="h6 h5-md fw-bold text-warning mb-0">{{ hilo.visitas }}</div>
+                                            <small class="text-muted d-none d-md-block">Visitas</small>
+                                            <small class="text-muted d-md-none">V</small>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <!-- Acciones del Hilo -->
-                                <div class="text-end">
+                                <!-- Acciones del Hilo Responsive -->
+                                <div class="d-flex justify-content-between justify-content-md-end">
                                     {% if user == hilo.creado_por %}
                                     <a href="{% url 'miapp:editar_hilo' hilo.id %}" class="btn btn-outline-primary btn-sm me-2">
-                                        <i class="fas fa-edit me-1"></i>Editar
+                                        <i class="fas fa-edit me-1 d-none d-md-inline"></i>
+                                        <span class="d-none d-md-inline">Editar</span>
+                                        <span class="d-md-none">E</span>
                                     </a>
                                     {% endif %}
                                     
@@ -236,7 +289,9 @@
                                         {% csrf_token %}
                                         <button type="submit" class="btn btn-outline-danger btn-sm" 
                                                 onclick="return confirm('¿Estás seguro de que quieres eliminar este hilo?')">
-                                            <i class="fas fa-trash me-1"></i>Eliminar
+                                            <i class="fas fa-trash me-1 d-none d-md-inline"></i>
+                                            <span class="d-none d-md-inline">Eliminar</span>
+                                            <span class="d-md-none">X</span>
                                         </button>
                                     </form>
                                     {% endif %}
@@ -247,13 +302,14 @@
                 </div>
                 {% endfor %}
             {% else %}
-                <!-- Estado vacío -->
-                <div class="text-center py-5">
-                    <i class="fas fa-comments fa-4x text-muted mb-3"></i>
-                    <h4 class="text-muted">No hay hilos disponibles</h4>
-                    <p class="text-muted">Sé el primero en crear un hilo de discusión</p>
-                    <a href="{% url 'miapp:crear_hilo' %}" class="btn btn-primary">
-                        <i class="fas fa-plus me-2"></i>Crear Primer Hilo
+                <!-- Estado vacío Responsive -->
+                <div class="text-center py-4 py-md-5">
+                    <i class="fas fa-comments fa-3x fa-2x-md text-muted mb-3"></i>
+                    <h4 class="h5 h4-md text-muted mb-2">No hay hilos disponibles</h4>
+                    <p class="text-muted mb-3 d-none d-md-block">Sé el primero en crear un hilo de discusión</p>
+                    <p class="text-muted mb-3 d-md-none">Crea el primer hilo</p>
+                    <a href="{% url 'miapp:crear_hilo' %}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-plus me-2"></i>Crear Hilo
                     </a>
                 </div>
             {% endif %}
@@ -279,5 +335,48 @@
 .user-avatar-small {
     font-weight: bold;
 }
+
+/* Responsive typography */
+@media (max-width: 768px) {
+    .h1-md { font-size: 2rem; }
+    .h4-md { font-size: 1.5rem; }
+    .h5-md { font-size: 1.25rem; }
+    .h6-md { font-size: 1rem; }
+    .small-md { font-size: 0.875rem; }
+}
+
+/* Mejoras táctiles para móviles */
+@media (max-width: 576px) {
+    .btn {
+        padding: 0.5rem 1rem;
+    }
+    
+    .card-body {
+        padding: 1rem;
+    }
+    
+    .form-select-sm {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+    }
+}
 </style>
+
+<script>
+// Auto-colapsar sidebar en móviles después de aplicar filtros
+document.addEventListener('DOMContentLoaded', function() {
+    const filterForm = document.getElementById('filterForm');
+    const sidebarCollapse = document.getElementById('sidebarCollapse');
+    
+    if (filterForm && sidebarCollapse && window.innerWidth < 992) {
+        filterForm.addEventListener('submit', function() {
+            // Colapsar sidebar después de enviar el formulario en móviles
+            setTimeout(() => {
+                const bsCollapse = new bootstrap.Collapse(sidebarCollapse);
+                bsCollapse.hide();
+            }, 500);
+        });
+    }
+});
+</script>
 {% endblock %}
