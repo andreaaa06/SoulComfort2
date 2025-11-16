@@ -96,16 +96,21 @@
             </div>
             
             <!-- Foro Comunitario -->
-            <div class="col-md-4 mb-4">
-                <div class="card feature-card h-100">
-                    <div class="card-body text-center p-4">
-                        <i class="fas fa-users text-danger mb-3 fa-3x"></i>
-                        <h5 class="card-title fw-bold">Foro Comunitario</h5>
-                        <p class="card-text">Conecta con otros en un espacio seguro de apoyo mutuo.</p>
-                        <a href="#" class="btn btn-outline-danger">Unirse</a>
-                    </div>
-                </div>
-            </div>
+            <!-- Foro Comunitario -->
+<div class="col-md-4 mb-4">
+    <div class="card feature-card h-100">
+        <div class="card-body text-center p-4">
+            <i class="fas fa-users text-danger mb-3 fa-3x"></i>
+            <h5 class="card-title fw-bold">Foro Comunitario</h5>
+            <p class="card-text">Conecta con otros en un espacio seguro de apoyo mutuo.</p>
+            {% if user.is_authenticated %}
+                <a href="{% url 'miapp:foro_comunitario' %}" class="btn btn-outline-danger">Ingresar al Foro</a>
+            {% else %}
+                <a href="{% url 'miapp:login' %}" class="btn btn-outline-danger">Iniciar Sesión para Acceder</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
             
             <!-- Mapa Interactivo -->
             <div class="col-md-4 mb-4">

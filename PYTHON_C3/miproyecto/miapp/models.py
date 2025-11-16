@@ -137,3 +137,105 @@ class FormularioContacto(models.Model):
     
     def __str__(self):
         return f"{self.asunto} - {self.usuario.username}"
+    
+# ==================== MODELOS FORO COMUNITARIO ====================
+# ==================== MODELOS FORO COMUNITARIO ====================
+
+class CategoriaForo(models.Model):
+    nombre = models.CharField(max_length=100)
+    descripcion = models.TextField(blank=True)
+    color = models.CharField(max_length=7, default='#6C63FF')
+    orden = models.IntegerField(default=0)
+    es_activa = models.BooleanField(default=True)
+    
+    class Meta:
+        ordering = ['orden', 'nombre']
+        verbose_name = 'Categoría del Foro'
+        verbose_name_plural = 'Categorías del Foro'
+    
+    def __str__(self):
+        return self.nombre
+
+class HiloForo(models.Model):
+    ESTADO_CHOICES = [
+        ('abierto', 'Abierto'),
+        ('cerrado', 'Cerrado'),
+        ('destacado', 'Destacado'),
+    ]
+    
+    titulo = models.CharField(max_length=200)
+    contenido = models.TextField()
+    categoria = models.ForeignKey(CategoriaForo, on_delete=models.CASCADE)
+    creado_por = models.ForeignKey(User, on_delete=models.CASCADE, related_name='hilos_creados')
+    estado = models.CharField(max_length=10, choices=ESTADO_CHOICES, default='abierto')
+    es_anonimo = models.BooleanField(default=False)
+    votos_positivos = models.IntegerField(default=0)
+    votos_negativos = models.IntegerField(default=0)
+    visitas = models.IntegerField(default=0)
+    creado_en = models.DateTimeField(auto_now_add=True)
+    actualizado_en = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering = ['-actualizado_en']
+        verbose_name = 'Hilo del Foro'
+        verbose_name_plural = 'Hilos del Foro'
+    
+    def __str__(self):
+        return self.titulo
+    
+    def total_respuestas(self):
+        return self.respuestas.count()
+    
+    def ultima_respuesta(self):
+        return self.respuestas.order_by('-creado_en').first()
+
+class RespuestaForo(models.Model):
+    hilo = models.ForeignKey(HiloForo, on_delete=models.CASCADE, related_name='respuestas')
+    contenido = models.TextField()
+    creado_por = models.ForeignKey(User, on_delete=models.CASCADE, related_name='respuestas_foro')
+    es_anonimo = models.BooleanField(default=False)
+    es_respuesta_oficial = models.BooleanField(default=False)
+    votos_positivos = models.IntegerField(default=0)
+    votos_negativos = models.IntegerField(default=0)
+    creado_en = models.DateTimeField(auto_now_add=True)
+    actualizado_en = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering = ['creado_en']
+        verbose_name = 'Respuesta del Foro'
+        verbose_name_plural = 'Respuestas del Foro'
+    
+    def __str__(self):
+        return f"Respuesta a: {self.hilo.titulo}"
+
+class VotoHilo(models.Model):
+    TIPO_VOTO_CHOICES = [
+        ('positivo', 'Positivo'),
+        ('negativo', 'Negativo'),
+    ]
+    
+    hilo = models.ForeignKey(HiloForo, on_delete=models.CASCADE)
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    tipo_voto = models.CharField(max_length=10, choices=TIPO_VOTO_CHOICES)
+    creado_en = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        unique_together = ['hilo', 'usuario']
+        verbose_name = 'Voto de Hilo'
+        verbose_name_plural = 'Votos de Hilos'
+
+class VotoRespuesta(models.Model):
+    TIPO_VOTO_CHOICES = [
+        ('positivo', 'Positivo'),
+        ('negativo', 'Negativo'),
+    ]
+    
+    respuesta = models.ForeignKey(RespuestaForo, on_delete=models.CASCADE)
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    tipo_voto = models.CharField(max_length=10, choices=TIPO_VOTO_CHOICES)
+    creado_en = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        unique_together = ['respuesta', 'usuario']
+        verbose_name = 'Voto de Respuesta'
+        verbose_name_plural = 'Votos de Respuestas'

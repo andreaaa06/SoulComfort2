@@ -3,8 +3,14 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.models import User
-from .models import UserProfile, Recurso, CategoriaRecurso, FormularioContacto
+from django.http import JsonResponse
+from .models import (
+    UserProfile, Recurso, CategoriaRecurso, FormularioContacto,
+    # AGREGAR ESTAS IMPORTACIONES DEL FORO:
+    CategoriaForo, HiloForo, RespuestaForo, VotoHilo, VotoRespuesta
+)
 from .forms import RecursoForm, UserForm, UserProfileForm
+
 
 def custom_login(request):
     if request.user.is_authenticated:
@@ -317,3 +323,206 @@ def pasante_consultas(request):
         messages.success(request, 'Respuesta enviada exitosamente')
     
     return render(request, 'miapp/pasante/consultas.html', {'consultas': consultas})
+
+# ==================== VISTAS FORO COMUNITARIO ====================# ==================== VISTAS FORO COMUNITARIO ====================
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.contrib.auth.models import User
+from django.http import JsonResponse
+from .models import (
+    UserProfile, Recurso, CategoriaRecurso, FormularioContacto,
+    # AGREGAR ESTAS IMPORTACIONES DEL FORO:
+    CategoriaForo, HiloForo, RespuestaForo
+)
+from .forms import RecursoForm, UserForm, UserProfileForm
+
+# ... (tus vistas existentes aquí)
+
+# ==================== VISTAS FORO COMUNITARIO SIMPLIFICADAS ==
+@login_required
+def foro_comunitario(request):
+    """Vista principal del foro comunitario"""
+    # Crear categorías por defecto si no existen
+    if not CategoriaForo.objects.exists():
+        categorias_default = [
+            {'nombre': 'Experiencias Personales', 'color': '#6C63FF', 'orden': 1},
+            {'nombre': 'Consejos y Estrategias', 'color': '#4CAF50', 'orden': 2},
+            {'nombre': 'Apoyo Emocional', 'color': '#FF6B6B', 'orden': 3},
+            {'nombre': 'Preguntas y Dudas', 'color': '#FFA726', 'orden': 4},
+        ]
+        for cat_data in categorias_default:
+            CategoriaForo.objects.create(
+                nombre=cat_data['nombre'],
+                color=cat_data['color'],
+                orden=cat_data['orden']
+            )
+    
+    categorias = CategoriaForo.objects.filter(es_activa=True).order_by('orden')
+    
+    # Filtros - solo se aplican cuando se presiona el botón
+    categoria_id = request.GET.get('categoria', '')
+    orden = request.GET.get('orden', 'recientes')
+    
+    # Query base
+    hilos = HiloForo.objects.select_related('categoria', 'creado_por', 'creado_por__userprofile')
+    
+    # Aplicar filtros solo si se envió el formulario
+    if 'aplicar_filtros' in request.GET:
+        if categoria_id and categoria_id != 'todas':
+            hilos = hilos.filter(categoria_id=categoria_id)
+    
+    # Aplicar ordenamiento CORREGIDO
+    if orden == 'populares':
+        hilos = hilos.order_by('-votos_positivos', '-visitas', '-actualizado_en')
+    elif orden == 'antiguos':
+        hilos = hilos.order_by('creado_en')
+    else:  # recientes (POR DEFECTO)
+        hilos = hilos.order_by('-creado_en')  # Cambiado de -actualizado_en a -creado_en
+    
+    # Estadísticas
+    stats = {
+        'total_hilos': HiloForo.objects.count(),
+        'total_respuestas': RespuestaForo.objects.count(),
+        'hilos_abiertos': HiloForo.objects.filter(estado='abierto').count(),
+    }
+    
+    context = {
+        'hilos': hilos,
+        'categorias': categorias,
+        'categoria_actual': categoria_id,
+        'orden_actual': orden,
+        'stats': stats,
+    }
+    
+    return render(request, 'miapp/foro_comunitario.html', context)
+
+@login_required
+def crear_hilo(request):
+    """Vista para crear un nuevo hilo"""
+    categorias = CategoriaForo.objects.filter(es_activa=True).order_by('orden')
+    
+    if request.method == 'POST':
+        titulo = request.POST.get('titulo')
+        contenido = request.POST.get('contenido')
+        categoria_id = request.POST.get('categoria')
+        es_anonimo = request.POST.get('es_anonimo') == 'on'
+        
+        if titulo and contenido and categoria_id:
+            hilo = HiloForo.objects.create(
+                titulo=titulo,
+                contenido=contenido,
+                categoria_id=categoria_id,
+                creado_por=request.user,
+                es_anonimo=es_anonimo
+            )
+            messages.success(request, 'Tu hilo ha sido creado exitosamente.')
+            return redirect('miapp:detalle_hilo', hilo_id=hilo.id)
+        else:
+            messages.error(request, 'Por favor completa todos los campos obligatorios.')
+    
+    context = {
+        'categorias': categorias,
+    }
+    
+    return render(request, 'miapp/crear_hilo.html', context)
+
+@login_required
+def editar_hilo(request, hilo_id):
+    """Vista para editar un hilo existente"""
+    hilo = get_object_or_404(HiloForo, id=hilo_id)
+    
+    # Solo el creador puede editar el hilo
+    if request.user != hilo.creado_por:
+        messages.error(request, 'No tienes permisos para editar este hilo.')
+        return redirect('miapp:detalle_hilo', hilo_id=hilo_id)
+    
+    categorias = CategoriaForo.objects.filter(es_activa=True).order_by('orden')
+    
+    if request.method == 'POST':
+        titulo = request.POST.get('titulo')
+        contenido = request.POST.get('contenido')
+        categoria_id = request.POST.get('categoria')
+        es_anonimo = request.POST.get('es_anonimo') == 'on'
+        
+        if titulo and contenido and categoria_id:
+            hilo.titulo = titulo
+            hilo.contenido = contenido
+            hilo.categoria_id = categoria_id
+            hilo.es_anonimo = es_anonimo
+            hilo.save()
+            
+            messages.success(request, 'Tu hilo ha sido actualizado exitosamente.')
+            return redirect('miapp:detalle_hilo', hilo_id=hilo.id)
+        else:
+            messages.error(request, 'Por favor completa todos los campos obligatorios.')
+    
+    context = {
+        'hilo': hilo,
+        'categorias': categorias,
+    }
+    
+    return render(request, 'miapp/editar_hilo.html', context)
+
+@login_required
+def detalle_hilo(request, hilo_id):
+    """Vista para ver un hilo específico y sus respuestas"""
+    hilo = get_object_or_404(
+        HiloForo.objects.select_related('categoria', 'creado_por', 'creado_por__userprofile'),
+        id=hilo_id
+    )
+    
+    # Incrementar contador de visitas
+    hilo.visitas += 1
+    hilo.save()
+    
+    respuestas = hilo.respuestas.select_related('creado_por', 'creado_por__userprofile').order_by('creado_en')
+    
+    if request.method == 'POST':
+        contenido = request.POST.get('contenido_respuesta')
+        es_anonimo = request.POST.get('es_anonimo') == 'on'
+        
+        if contenido:
+            RespuestaForo.objects.create(
+                hilo=hilo,
+                contenido=contenido,
+                creado_por=request.user,
+                es_anonimo=es_anonimo
+            )
+            messages.success(request, 'Tu respuesta ha sido publicada exitosamente.')
+            return redirect('miapp:detalle_hilo', hilo_id=hilo.id)
+    
+    context = {
+        'hilo': hilo,
+        'respuestas': respuestas,
+    }
+    
+    return render(request, 'miapp/detalle_hilo.html', context)
+
+@login_required
+def eliminar_hilo(request, hilo_id):
+    """Vista para eliminar un hilo (solo admin/pasante)"""
+    hilo = get_object_or_404(HiloForo, id=hilo_id)
+    
+    # Verificar permisos: SOLO admin o pasante pueden eliminar
+    puede_eliminar = (
+        hasattr(request.user, 'userprofile') and 
+        (request.user.userprofile.es_admin() or request.user.userprofile.es_pasante())
+    )
+    
+    if not puede_eliminar:
+        messages.error(request, 'No tienes permisos para eliminar hilos. Solo el staff puede eliminar hilos.')
+        return redirect('miapp:detalle_hilo', hilo_id=hilo_id)
+    
+    if request.method == 'POST':
+        titulo = hilo.titulo
+        hilo.delete()
+        messages.success(request, f'El hilo "{titulo}" ha sido eliminado exitosamente.')
+        return redirect('miapp:foro_comunitario')
+    
+    context = {
+        'hilo': hilo,
+    }
+    
+    return render(request, 'miapp/eliminar_hilo.html', context)

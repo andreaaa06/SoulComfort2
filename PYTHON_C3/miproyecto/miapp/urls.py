@@ -21,6 +21,13 @@ urlpatterns = [
     # ==================== DASHBOARDS ESPECÍFICOS ====================
     path('admin/dashboard/', views.admin_dashboard, name='admin_dashboard'),
     path('pasante/dashboard/', views.pasante_dashboard, name='pasante_dashboard'),
+
+   # URLs DEL FORO COMUNITARIO ACTUALIZADAS
+    path('foro/', views.foro_comunitario, name='foro_comunitario'),
+    path('foro/crear/', views.crear_hilo, name='crear_hilo'),
+    path('foro/hilo/<int:hilo_id>/', views.detalle_hilo, name='detalle_hilo'),
+    path('foro/hilo/<int:hilo_id>/editar/', views.editar_hilo, name='editar_hilo'),
+    path('foro/hilo/<int:hilo_id>/eliminar/', views.eliminar_hilo, name='eliminar_hilo'),
     
     # ==================== ADMINISTRACIÓN (SOLO ADMIN) ====================
     path('admin/usuarios/', views.admin_gestion_usuarios, name='admin_gestion_usuarios'),
@@ -31,3 +38,4 @@ urlpatterns = [
     path('pasante/recursos/', views.pasante_gestion_recursos, name='pasante_gestion_recursos'),
     path('pasante/consultas/', views.pasante_consultas, name='pasante_consultas'),
 ]
+
